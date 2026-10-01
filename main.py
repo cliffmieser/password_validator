@@ -16,8 +16,11 @@ import string
 import argparse # CLI parsing module
 import getpass # prompt for password with echo turned off
 from rules import rate_length, rate_div, calc_entropy
+from common_passwords import read_seclist
 
 def pw_report(pw_dict: dict, entropy_score: float, length_rating: str):
+
+
     print(f"\n--- Password Evaluation ---")
     print(f"Length: {pw_dict["length"]} --> ({length_rating})")
     print(f"Character Pool Size: {pw_dict["pool_size"]}")
@@ -29,6 +32,10 @@ def main():
     # CLI entry point
 
     pw = getpass.getpass("Enter a password: ")
+    if (pw in read_seclist()):
+        while (pw in read_seclist()):
+            print("Password unsecure (exists in secList 10k most common passwords), Try again...")
+            pw = getpass.getpass("Enter a password: ")
 
     div_stats = rate_div(pw) # rates diversity of characters
     entropy = calc_entropy(len(pw), div_stats["pool_size"]) # calculates password entropy
