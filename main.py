@@ -11,7 +11,7 @@
     - scoring.py -> logic to calculate score or entropy and returns a rating
 
  """
-
+import sys
 import string
 import argparse # CLI parsing module
 import getpass # prompt for password with echo turned off
@@ -27,28 +27,49 @@ def pw_report(pw_dict: dict, entropy_score: float, length_rating: str):
     print(f"Entropy: {entropy_score:.2f} bits")
 
 
+def has_args() -> bool:
+    """ Checks if args were passed to terminal"""
+    if (len(sys.argv) <= 1):
+        return False# no args provided
+    else: return True
+
+
+    
+
+def get_args():
+    parser = argparse.ArgumentParser(
+        description="Test password strength at the command line")
+    
+    parser.add_argument("-p", "--password", help="Read user provided passoword string", type=str)
+    parser.add_argument("-m", "--minimum", help="Set minimum length for password", type=int)
+    args = parser.parse_args()
+    return args
+
 
 def main():
     # CLI entry point
 
-    pw = getpass.getpass("Enter a password: ")
-    if (pw in read_seclist()):
-        while (pw in read_seclist()):
-            print("Password unsecure (exists in secList 10k most common passwords), Try again...")
-            pw = getpass.getpass("Enter a password: ")
+    #call check_argparser function first check for args (if any)
+    args = has_args() # Namespace of provided arguments
 
-    div_stats = rate_div(pw) # rates diversity of characters
-    entropy = calc_entropy(len(pw), div_stats["pool_size"]) # calculates password entropy
-    length_rating = rate_length(pw) # rates length of password string
+    if (len(sys.argv) <= 1): # if no args provided
+        pw = getpass.getpass("Enter a password: ")
+        if (pw in read_seclist()):
+            while (pw in read_seclist()):
+                print("Password unsecure (exists in secList 10k most common passwords), Try again...")
+                pw = getpass.getpass("Enter a password: ")
 
-    pw_report(div_stats, entropy, length_rating)
+        div_stats = rate_div(pw) # rates diversity of characters
+        entropy = calc_entropy(len(pw), div_stats["pool_size"]) # calculates password entropy
+        length_rating = rate_length(pw) # rates length of password string
 
-    # possible args
-    # parser = argparse.ArgumentParser()
-    # parser.add_argument("-p", "--password", help="Read user provided passoword string", type=str)
-    # parser.add_argument("-m", "--minimum", help="Set minimum length for password", type=int)
-    # args = parser.parse_args()
-    # print(args)
+        pw_report(div_stats, entropy, length_rating)
+    else: # args provided by user 
+        args_exist = has_args() # bool values
+        
+
+    
+
 
 
     
