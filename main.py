@@ -2,13 +2,13 @@
  Project 1 
  Sep 30 2026
  
- Goals: A simple CLI password checker and validator. 
+ Goals: A (very) simple CLI password checker and validator. 
 
  Structure:
-    - main.py -> CLI entry point, handles inputs/flags, outputs report 
-    - rules.py -> functions to test length, charset, and patterns
-    - common_password.txt -> list of banned passwords
-    - scoring.py -> logic to calculate score or entropy and returns a rating
+    [*] main.py -> CLI entry point, handles inputs/flags, outputs report 
+    [*] rules.py -> functions to test length, charset, and patterns
+    [*] common_password.txt -> list of most common passwords
+    [ ] scoring.py (WIP)-> logic to calculate score or entropy and returns a rating
 
  """
 import sys
@@ -36,7 +36,7 @@ def has_args() -> bool:
 
     
 
-def get_args():
+def get_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Test password strength at the command line")
     
@@ -65,15 +65,8 @@ def main():
 
         pw_report(div_stats, entropy, length_rating)
     else: # args provided by user 
-        args_exist = has_args() # bool values
+        args_exist = has_args() # bool value
         
-
-    
-
-
-
-    
-
 
 
 if __name__ == "__main__":
