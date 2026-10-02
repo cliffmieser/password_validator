@@ -11,6 +11,7 @@
     [ ] scoring.py (WIP)-> logic to calculate score or entropy and returns a rating
 
  """
+
 import sys
 import argparse # CLI parsing module
 import getpass # prompt for password with echo turned off
