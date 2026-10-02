@@ -38,7 +38,6 @@ def has_args() -> bool:
 def get_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Test password strength at the command line")
-    
     parser.add_argument("-p", "--password", help="Read user provided passoword string", type=str)
     parser.add_argument("-m", "--minimum", help="Set minimum length for password", type=int)
     args = parser.parse_args()
@@ -52,7 +51,7 @@ def get_password() -> str: # returns a string representing passowrd
             print("Password unsecure (exists in secList 10k most common passwords), Try again...")
             pw = getpass.getpass("Enter a password: ")
     else:
-        return pw
+        return str(pw)
 
 def get_scores(password: str) -> tuple:
         char_diversity_dict = rate_diversity(password) # rates diversity of characters
@@ -82,7 +81,7 @@ def main():
             # idx: index of item (int),  arg: the argument (str)
             match arg:
                 case "password": 
-                    pw = get_password()
+                    pw = args_dict["password"]
                     result.update({"password": pw})
                     # scores = get_scores(pw)
                     # pw_report(*scores)
@@ -96,17 +95,14 @@ def main():
                                 print(f"Error: password must meet minium length requirement ({result["minimum"]})...")
                                 pw = get_password()
                             else:
+                                result.update({"password": pw})
                                 break
-                    else: continue
+                    else: continue # break out of loop
 
-
-
-
-
-            
-
-
+        scores = get_scores(pw)
+        pw_report(*scores)
         
+        # print(f"result -> {result}")
 
 
 if __name__ == "__main__":

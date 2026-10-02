@@ -5,3 +5,6 @@
 #Bytecode & cache
 __pycache__/
 *.pyc
+
+#other 
+pyTest/*
