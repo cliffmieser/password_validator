@@ -15,7 +15,7 @@ def rate_length(pw: str) -> str:
             return "strong"
 
 
-def rate_div(pw: str) -> dict:
+def rate_diversity(pw: str) -> dict:
     """ Takes a password and  calculates character pool size (R) for entropy calculation"""
     has_lower = any(c in string.ascii_lowercase for c in pw)
     has_upper = any(c in string.ascii_uppercase for c in pw)

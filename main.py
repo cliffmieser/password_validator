@@ -12,10 +12,9 @@
 
  """
 import sys
-import string
 import argparse # CLI parsing module
 import getpass # prompt for password with echo turned off
-from rules import rate_length, rate_div, calc_entropy
+from rules import rate_length, rate_diversity, calc_entropy
 from common_passwords import read_seclist
 
 def pw_report(pw_dict: dict, entropy_score: float, length_rating: str):
@@ -46,28 +45,71 @@ def get_args() -> argparse.Namespace:
     return args
 
 
+def get_password() -> str: # returns a string representing passowrd
+    pw = getpass.getpass("Enter a password: ")
+    if (pw in read_seclist()):
+        while (pw in read_seclist()):
+            print("Password unsecure (exists in secList 10k most common passwords), Try again...")
+            pw = getpass.getpass("Enter a password: ")
+    else:
+        return pw
+
+def get_scores(password: str) -> tuple:
+        char_diversity_dict = rate_diversity(password) # rates diversity of characters
+        entropy = calc_entropy(len(password), char_diversity_dict["pool_size"]) # calculates password entropy
+        length_rating = rate_length(password) # rates length of password string
+
+        return (char_diversity_dict, entropy, length_rating)
+
 def main():
     # CLI entry point
 
     #call check_argparser function first check for args (if any)
-    args = has_args() # Namespace of provided arguments
 
-    if (len(sys.argv) <= 1): # if no args provided
-        pw = getpass.getpass("Enter a password: ")
-        if (pw in read_seclist()):
-            while (pw in read_seclist()):
-                print("Password unsecure (exists in secList 10k most common passwords), Try again...")
-                pw = getpass.getpass("Enter a password: ")
+    if (len(sys.argv) <= 1): # if no args providedk ==  vars(get_args())[k] and
+        pw = get_password()
 
-        div_stats = rate_div(pw) # rates diversity of characters
-        entropy = calc_entropy(len(pw), div_stats["pool_size"]) # calculates password entropy
-        length_rating = rate_length(pw) # rates length of password string
+        scores = get_scores(pw)
+        # char_diversity_dict = rate_diversity(pw) # rates diversity of characters
+        # entropy = calc_entropy(len(pw), char_diversity_dict["pool_size"]) # calculates password entropy
+        # length_rating = rate_length(pw) # rates length of password string
+        pw_report(*scores)
+    elif (has_args() == True and bool(args_filtered:= list(filter(lambda k: vars(get_args())[k] is not None, args_dict:= vars(get_args()))))): # args provided by user 
+        # has arguments AND arguments dict has at least one non-None value
+        # dictionary of arguments stored in args_dict
+        result = {}
+        for idx, arg in enumerate(args_filtered):
+            # idx: index of item (int),  arg: the argument (str)
+            match arg:
+                case "password": 
+                    pw = get_password()
+                    result.update({"password": pw})
+                    # scores = get_scores(pw)
+                    # pw_report(*scores)
+                case "minimum":
+                    result.update({"minimum": args_dict[arg]})
+                    if "password" not in result.keys():
+                        # get the password
+                        while (True): # loop for ensureing password length meets minimum required length
+                            pw = get_password()
+                            if len(pw) <  result["minimum"]:
+                                print(f"Error: password must meet minium length requirement ({result["minimum"]})...")
+                                pw = get_password()
+                            else:
+                                break
+                    else: continue
 
-        pw_report(div_stats, entropy, length_rating)
-    else: # args provided by user 
-        args_exist = has_args() # bool value
+
+
+
+
+            
+
+
         
 
 
 if __name__ == "__main__":
+
+
     main()
