@@ -56,8 +56,8 @@ def get_scores(password: str) -> tuple:
 
 def main():
     # CLI entry point
-    #call check_argparser function first check for args (if any)
-    if (len(sys.argv) <= 1): # 
+    # call check_argparser function first check for args (if any)
+    if (len(sys.argv) <= 1):
         pw = get_password()
         scores = get_scores(pw)
         pw_report(*scores)
