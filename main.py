@@ -35,6 +35,7 @@ def get_args() -> argparse.Namespace:
         description="Test password strength at the command line")
     parser.add_argument("-p", "--password", help="Read user provided passoword string", type=str)
     parser.add_argument("-m", "--minimum", help="Set minimum length for password", type=int)
+    parser.add_argument("-mu", "--maximum", help="Set maximum length for password", type=int)
     args = parser.parse_args()
     return args
 
@@ -86,8 +87,6 @@ def main():
 
         scores = get_scores(pw)
         pw_report(*scores)
-        
-        # print(f"result -> {result}")
 
 
 if __name__ == "__main__":
