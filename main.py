@@ -35,7 +35,7 @@ def get_args() -> argparse.Namespace:
         description="Test password strength at the command line")
     parser.add_argument("-p", "--password", help="Read user provided passoword string", type=str)
     parser.add_argument("-m", "--minimum", help="Set minimum length for password", type=int)
-    parser.add_argument("-mu", "--maximum", help="Set maximum length for password", type=int)
+    # parser.add_argument("-mu", "--maximum", help="Set maximum length for password", type=int)
     args = parser.parse_args()
     return args
 
@@ -66,12 +66,14 @@ def main():
         # has arguments AND arguments dict has at least one non-None value
         # dictionary of arguments stored in args_dict
         result = {}
+
+        # loop through the index of all the arguments
         for idx, arg in enumerate(args_filtered): # idx: index of item (int),  arg: the argument (str)
             match arg:
-                case "password": 
+                case "password":  # if password option was passed to the terminal
                     pw = args_dict["password"]
                     result.update({"password": pw})
-                case "minimum":
+                case "minimum": # if minimum was passed in the terminal 
                     result.update({"minimum": args_dict[arg]})
                     if "password" not in result.keys():
                         # get the password
@@ -84,6 +86,16 @@ def main():
                                 result.update({"password": pw})
                                 break # break out of loop
                     else: continue # continues to next iteration
+                # case "maximum": 
+                #     result.update({"maximum": args_dict[arg]})
+                #     if "password" not in result.keys() and "minimum" in result.keys():
+                #         while (True):
+                #             pw = get_password()
+                #             if len(pw) < result["minimum"] or len(pw) > result["maximum"]: 
+                #                 print(f"Error: password must meet minimum and maximum length requirement (minimum length ->{result["minimum"]}\nmaximum length -> {result['maximum']})")
+                #             else:
+                #                 result.update({"password": pw})
+                #                 break # break out of loop   
 
         scores = get_scores(pw)
         pw_report(*scores)
